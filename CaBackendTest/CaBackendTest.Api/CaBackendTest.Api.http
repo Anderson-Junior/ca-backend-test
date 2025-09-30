@@ -1,0 +1,6 @@
+@CaBackendTest.Api_HostAddress = http://localhost:5078
+
+GET {{CaBackendTest.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,56 +1,109 @@
-**Teste para vaga de Desenvolvimento Back-end .NET**
----------------------
-Criar uma API REST para gerenciar faturamento de clientes.
----------------------
-**Funcionalidades 🛠️**
+# CaBackendTest – Billing API
 
-* Customer: CRUD; Criar um cadastro do cliente com os seguintes campos:
-    * Id;
-    * Name;
-    * Email;
-    * Address;
-    * **Todos os campos são de preenchimento obrigatório.**
-* Produtos: CRUD; Criar um cadastro de produtos com os seguintes campos:
-    * Id;
-    * Nome do produto;
-    * **Todos os campos são de preenchimento obrigatório.**
-* Controle de conferência e importação de billing.
-    * Utilizar postman para consulta dos dados da API’s para criação das tabelas de billing e billingLines.
-	  * Após consulta, e criação do passo anterior, inserir no banco de dados o primeiro registro do retorno da API de billing para criação de cliente e produto através do swagger ou dataseed.
+## Descrição
 
-    * Utilizar as API’s para consumo dos dados a partir da aplicação que está criada e fazer as seguintes verificações:
-      * Se o cliente e o produto existirem, inserir o registro do billing e billingLines no DB local.
-      * Caso se o cliente existir ou só o produto existir, deve retornar um erro na aplicação informando sobre a criação do registro faltante.
-      * Criar exceptions tratando mal funcionamento ou interrupção de serviço quando API estiver fora.
-* Lista de API’s :
-	* Get https://65c3b12439055e7482c16bca.mockapi.io/api/v1/billing
-	* Get https://65c3b12439055e7482c16bca.mockapi.io/api/v1/billing/:id
-	* Post https://65c3b12439055e7482c16bca.mockapi.io/api/v1/billing
-	* Delete https://65c3b12439055e7482c16bca.mockapi.io/api/v1/billing/:id
-	* PUT https://65c3b12439055e7482c16bca.mockapi.io/api/v1/billing/:id
----------------------
-**Requisitos 💻**
+Esta API foi desenvolvida como parte de um teste para vaga de desenvolvedor. O sistema realiza o gerenciamento de produtos e clientes (CRUD completo) e permite integrar, importar e validar faturas (`billings`) de uma API externa, armazenando-as localmente no banco de dados SQL Server.
 
-* A aplicação deverá ser desenvolvida usando .NET a partir da versão 5+;
-* Modelagem de dados pode ser no banco de dados de sua preferência, podendo ser um banco relacional ou não relacional (mongodb, SQL Server, PostgreSQL, MySQL, etc);
-* Persistência de dados no banco deverá ser feita utilizando o Entity Framework Core;
-* O retorno da API deverá ser em formato JSON;
-* Utilizar as requisições GET, POST, PUT ou DELETE, conforme a melhor prática;
-* Criar o README do projeto descrevendo as tecnologias utilizadas, chamadas dos serviços e configurações necessário para executar a aplicação.
----------------------
-**Pontos Extras ⭐**
+A aplicação foi criada usando a estrutura **Clean Architecture** para garantir separação de responsabilidades, testabilidade e facilidade de manutenção.
 
-* Desenvolvimento baseado em TDD;
-* Práticas de modelagem de projeto;
-* Criar e configurar o Swagger da API de acordo com as melhores práticas;
-* Criar uma API para extração dos dados de faturamento.
-* Sugestões serão bem vindas.
----------------------
-**Submissão do teste 📝**
+---
 
-Crie um fork do teste para acompanharmos o seu desenvolvimento através dos seus commits.
+## Funcionalidades
 
----------------------
-Obrigado!
+- **CRUD de Produtos**
+  - Permite criar, consultar, editar e deletar produtos.
+- **CRUD de Clientes**
+  - Permite criar, consultar, editar e deletar clientes.
+- **Endpoint para listar Billings externas**
+  - `/api/Billing` (GET): Lista todas as billings disponíveis na API externa.
+- **Endpoint para importar Billings**
+  - `/api/Billing/ImportsBillingExternalAPI` (POST): Importa todas as billings externas para o banco local. Valida se os clientes e produtos referenciados existem no banco local:
+    - Se **não existirem**, retorna erro de validação.
+    - Se **existirem**, cria o registro de billing e suas respectivas linhas (BillingLine) no banco de dados.
 
-Agradecemos sua participação no teste. Boa sorte! 😄
+- **Seed automático**
+  - No primeiro uso, cria 1 cliente e 2 produtos no banco local, com base no primeiro registro retornado da API externa (`https://65c3b12439055e7482c16bca.mockapi.io/api/v1/billing`).
+
+---
+
+## Tecnologias Utilizadas
+
+- [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- SQL Server 2022 (Docker)
+- Docker/Docker Compose
+- Entity Framework Core
+- Swagger (OpenAPI)
+- Clean Architecture
+
+---
+
+## Estrutura do Projeto (Clean Architecture)
+
+O projeto é organizado seguindo os princípios da Clean Architecture:
+
+- **CaBackendTest.Api** – Camada de apresentação e endpoints da API.
+- **CaBackendTest.Application** – Serviços de aplicação, DTOs, regras de negócio e interfaces.
+- **CaBackendTest.Domain** – Entidades de domínio, interfaces de repositório e contratos de serviço.
+- **CaBackendTest.Infrastructure** – Infraestrutura para banco de dados (Contexto, Migrations, Repositórios), serviços externos e persistência.
+
+Essa separação facilita manutenção, testes e evolução da aplicação, promovendo baixo acoplamento entre as camadas.
+
+---
+
+## Como Executar o Projeto
+
+### 1. Pré-requisitos
+
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) instalado na máquina.
+- [Docker](https://www.docker.com/get-started) instalado e rodando.
+  - Caso não tenha Docker:
+    - **Windows/Mac:** Acesse https://www.docker.com/products/docker-desktop
+    - **Linux:** Siga as instruções oficiais para sua distribuição (ex: Ubuntu: `sudo apt-get install docker.io`)
+
+### 2. Subindo o Banco de Dados com Docker
+
+- Abra um terminal na pasta raiz do projeto onde está o arquivo `docker-compose.yml`.
+- Execute o comando:
+  *docker-compose up -d*
+  
+
+Isso irá baixar a imagem oficial do SQL Server, criar e rodar um container chamado `sqlserver_local` com a porta 1433 exposta.
+
+### 3. Configurando a Connection String
+
+- No arquivo `appsettings.json`, utilize a seguinte connection string (ou ajuste conforme necessário):
+
+`"DefaultConnection": "Server=localhost,1433;Database=ca-backend-test;User Id=sa;Password=StrongPassword;TrustServerCertificate=True;"`
+
+
+### 4. Executando o Projeto
+
+- No terminal, execute:
+  *dotnet run --project CaBackendTest.Api*
+
+- Ou, se preferir, você pode abrir o projeto no **Visual Studio 2022** e executar diretamente pela interface gráfica clicando no botão de **Play** (Iniciar Depuração) na barra superior.
+
+- Na primeira inicialização:
+  - O banco de dados será criado automaticamente (via migrations EF Core).
+  - Será criado 1 registro de cliente e 2 de produtos com base no primeiro billing externo.
+
+### 5. Acessando a API
+
+- Acesse a documentação Swagger em: 
+  - [http://localhost:7102/swagger/index.html](http://localhost:7102/swagger/index.html) (ajuste a porta se necessário)
+- Teste os endpoints de Products, Customers e Billings diretamente pela interface Swagger.
+
+---
+
+## Observações Importantes
+
+- **Validação na importação de billings:** O sistema valida se clientes e produtos existem antes de importar uma billing. Caso algum não exista, retorna erro de validação detalhado.
+- **Seed automático:** No primeiro uso, 1 cliente e 2 produtos serão criados automaticamente, correspondendo ao primeiro registro da API externa.
+- **Banco criado automaticamente:** Não é necessário criar manualmente o banco. Basta rodar a aplicação após o docker-compose.
+
+---
+
+## Contato
+
+- Desenvolvedor: Anderson
+- [Send email](mailto:ander.lemos.jr@email.com) 
