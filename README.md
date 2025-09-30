@@ -34,6 +34,7 @@ A aplicação foi criada usando a estrutura **Clean Architecture** para garantir
 - Entity Framework Core
 - Swagger (OpenAPI)
 - Clean Architecture
+- **Repository Pattern:** Padrão de projeto para abstração do acesso a dados, facilitando manutenção, testes e alinhado com princípios de arquitetura como DDD.
 
 ---
 
@@ -73,7 +74,7 @@ Isso irá baixar a imagem oficial do SQL Server, criar e rodar um container cham
 
 - No arquivo `appsettings.json`, utilize a seguinte connection string (ou ajuste conforme necessário):
 
-`"DefaultConnection": "Server=localhost,1433;Database=ca-backend-test;User Id=sa;Password=StrongPassword;TrustServerCertificate=True;"`
+`"Server=localhost,1433;Database=ca-backend-test;User Id=sa;Password=Password123!;TrustServerCertificate=True;"`
 
 
 ### 4. Executando o Projeto
