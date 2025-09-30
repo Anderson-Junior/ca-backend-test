@@ -50,7 +50,6 @@ namespace CaBackendTest.Application.Services.Products
 
             existingProduct.Name = updatedProduct.Name;
 
-
             await _productRepository.UpdateAsync(existingProduct, cancellationToken);
             return true;
         }
