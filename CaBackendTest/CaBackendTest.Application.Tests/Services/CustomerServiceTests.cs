@@ -10,6 +10,9 @@ namespace CaBackendTest.Application.Tests.Services
     {
         private readonly Mock<ICustomerRepository> mockCustomerRepo = new();
 
+        Customer customer = new("João", "joaosilva@gmail.com", "Maria Sobania, 477");
+        UpsertCustomerDto updatedCustomerDto = new() { Name = "João Silva", Email = "silvajoao@hotmail.com", Address = "Rua Joaquina Zidane, 854" };
+
         [Fact]
         public async Task AddAsync_ShouldAddCustomerAndReturnCreatedCustomer()
         {
@@ -76,8 +79,6 @@ namespace CaBackendTest.Application.Tests.Services
         public async Task GetById_ShouldReturnCustomer_WhenCustomerExists()
         {
             // Arrange
-            var customer = new Customer("João", "joaosilva@gmail.com", "Maria Sobania, 477");
-
             mockCustomerRepo.Setup(repo => repo.GetById(customer.Id))
                 .ReturnsAsync(customer);
 
@@ -115,8 +116,6 @@ namespace CaBackendTest.Application.Tests.Services
         [Fact]
         public async Task DeleteAsync_ShouldReturnTrueAndDeleteCustomer_WhenCustomerExists()
         {
-            var customer = new Customer("João", "joaosilva@gmail.com", "Maria Sobania, 477");
-
             mockCustomerRepo.Setup(repo => repo.GetById(customer.Id))
                 .ReturnsAsync(customer);
 
@@ -153,31 +152,29 @@ namespace CaBackendTest.Application.Tests.Services
             mockCustomerRepo.Verify(repo => repo.UpdateAsync(It.IsAny<Customer>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
-
         [Fact]
         public async Task UpdateAsync_ShouldReturnTrue_WhenCustomerIsSuccessfullyUpdated()
         {
             // Arrange
-            var existingCustomer = new Customer("João", "joaosilva@gmail.com", "Maria Sobania, 477");
-            var updatedCustomerDto = new UpsertCustomerDto { Name = "Produto Atualizado" };
+            mockCustomerRepo.Setup(repo => repo.GetById(customer.Id))
+                .ReturnsAsync(customer);
 
-            mockCustomerRepo.Setup(repo => repo.GetById(existingCustomer.Id))
-                .ReturnsAsync(existingCustomer);
-
-            mockCustomerRepo.Setup(repo => repo.UpdateAsync(existingCustomer, It.IsAny<CancellationToken>()))
+            mockCustomerRepo.Setup(repo => repo.UpdateAsync(customer, It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
             var service = new CustomerService(mockCustomerRepo.Object);
 
             // Act
-            var result = await service.UpdateAsync(existingCustomer.Id, updatedCustomerDto, CancellationToken.None);
+            var result = await service.UpdateAsync(customer.Id, updatedCustomerDto, CancellationToken.None);
 
             // Assert
             Assert.True(result);
-            Assert.Equal(updatedCustomerDto.Name, existingCustomer.Name);
 
-            mockCustomerRepo.Verify(repo => repo.GetById(existingCustomer.Id), Times.Once);
-            mockCustomerRepo.Verify(repo => repo.UpdateAsync(existingCustomer, It.IsAny<CancellationToken>()), Times.Once);
+            // simulates editing the email, but without changing the other fields (name and address), PUT REST
+            Assert.Equal(updatedCustomerDto.Email, customer.Email);
+
+            mockCustomerRepo.Verify(repo => repo.GetById(customer.Id), Times.Once);
+            mockCustomerRepo.Verify(repo => repo.UpdateAsync(customer, It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }
