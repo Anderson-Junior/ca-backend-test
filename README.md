@@ -35,6 +35,9 @@ A aplicação foi criada usando a estrutura **Clean Architecture** para garantir
 - Swagger (OpenAPI)
 - Clean Architecture
 - **Repository Pattern:** Padrão de projeto para abstração do acesso a dados, facilitando manutenção, testes e alinhado com princípios de arquitetura como DDD.
+- **XUnit:** Framework de testes para .NET, utilizado para testes unitários e de integração.
+- **Moq:** Framework para geração de mocks em testes, facilitando a simulação de dependências e comportamentos.
+- **MockHttp:** Utilizado para simular requisições HTTP em testes de serviços externos, garantindo isolamento dos testes.
 
 ---
 
@@ -42,12 +45,16 @@ A aplicação foi criada usando a estrutura **Clean Architecture** para garantir
 
 O projeto é organizado seguindo os princípios da Clean Architecture:
 
-- **CaBackendTest.Api** – Camada de apresentação e endpoints da API.
-- **CaBackendTest.Application** – Serviços de aplicação, DTOs, regras de negócio e interfaces.
-- **CaBackendTest.Domain** – Entidades de domínio, interfaces de repositório e contratos de serviço.
-- **CaBackendTest.Infrastructure** – Infraestrutura para banco de dados (Contexto, Migrations, Repositórios), serviços externos e persistência.
+| Projeto                            | Descrição                                                         |
+| ---------------------------------- | ----------------------------------------------------------------- |
+| CaBackendTest.Api                  | Camada de apresentação, endpoints da API.                        |
+| CaBackendTest.Application          | Serviços de aplicação, DTOs, regras de negócio e interfaces.      |
+| CaBackendTest.Domain               | Entidades de domínio, interfaces de repositório e contratos.      |
+| CaBackendTest.Infrastructure       | Infraestrutura para banco, serviços externos e persistência.     |
+| CaBackendTest.Application.Tests    | Testes unitários/aplicação com XUnit, Moq e MockHttp.             |
+| CaBackendTest.Infrastructure.Tests | Testes para infraestrutura simulando serviços com MockHttp e Moq.|
 
-Essa separação facilita manutenção, testes e evolução da aplicação, promovendo baixo acoplamento entre as camadas.
+Essa separação facilita manutenção, testes e evolução da aplicação, promovendo baixo acoplamento e alta testabilidade.
 
 ---
 
