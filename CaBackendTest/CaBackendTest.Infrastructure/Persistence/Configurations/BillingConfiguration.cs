@@ -10,7 +10,6 @@ namespace CaBackendTest.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(x => x.Id);
 
-            // Properties
             builder.Property(x => x.InvoiceNumber)
                 .IsRequired()
                 .HasMaxLength(40);
@@ -29,22 +28,15 @@ namespace CaBackendTest.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasColumnType("decimal(18,2)");
 
-            // Relationships
-
-            // Customer 1:N Billing
             builder.HasOne(x => x.Customer)
                 .WithMany(c => c.Billings)
                 .HasForeignKey(x => x.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Billing 1:N BillingLines
             builder.HasMany(x => x.BillingLines)
                 .WithOne(l => l.Billing)
                 .HasForeignKey(l => l.BillingId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            // Inicialização para coleção (opcional, pode ser feito no constructor da entity)
-            builder.Navigation(x => x.BillingLines).AutoInclude(false);
         }
     }
 }

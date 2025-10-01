@@ -54,7 +54,7 @@ namespace CaBackendTest.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Billings");
+                    b.ToTable("Billings", (string)null);
                 });
 
             modelBuilder.Entity("CaBackendTest.Domain.Entities.BillingLine", b =>
@@ -89,7 +89,7 @@ namespace CaBackendTest.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("BillingLines");
+                    b.ToTable("BillingLines", (string)null);
                 });
 
             modelBuilder.Entity("CaBackendTest.Domain.Entities.Customer", b =>
@@ -114,7 +114,7 @@ namespace CaBackendTest.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
 
                     b.HasData(
                         new
@@ -138,7 +138,7 @@ namespace CaBackendTest.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
                     b.HasData(
                         new

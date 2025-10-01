@@ -29,13 +29,11 @@ internal sealed class BillingLineConfiguration : IEntityTypeConfiguration<Billin
         builder.Property(x => x.BillingId)
             .IsRequired();
 
-        // Relacionamento BillingLine -> Product
         builder.HasOne(x => x.Product)
-            .WithMany() // Se Product não tem coleção de BillingLine, mantenha vazio
+            .WithMany()
             .HasForeignKey(x => x.ProductId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // Relacionamento BillingLine -> Billing
         builder.HasOne(x => x.Billing)
             .WithMany(b => b.BillingLines)
             .HasForeignKey(x => x.BillingId)

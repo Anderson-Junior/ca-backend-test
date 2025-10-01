@@ -3,7 +3,6 @@ using CaBackendTest.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace CaBackendTest.Infrastructure.Services
 {
@@ -54,16 +53,6 @@ namespace CaBackendTest.Infrastructure.Services
             {
                 _logger.LogError(httpEx, "Error performing HTTP request to external billing API.");
                 throw new ApplicationException("Failed to communicate with the external billing service.", httpEx);
-            }
-            catch (NotSupportedException nsEx)
-            {
-                _logger.LogError(nsEx, "Unsupported content format in response.");
-                throw new ApplicationException("Response format from external service is not supported.", nsEx);
-            }
-            catch (JsonException jsonEx)
-            {
-                _logger.LogError(jsonEx, "Error deserializing response from external API.");
-                throw new ApplicationException("Invalid or malformed response from external API.", jsonEx);
             }
             catch (Exception ex)
             {
