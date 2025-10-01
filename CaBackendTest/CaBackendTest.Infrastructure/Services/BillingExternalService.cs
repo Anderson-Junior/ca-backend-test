@@ -30,8 +30,9 @@ namespace CaBackendTest.Infrastructure.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
+                    var message = $"Error accessing external API: status code {response.StatusCode}";
                     _logger.LogError("Request to external API failed. StatusCode: {StatusCode}", response.StatusCode);
-                    throw new ApplicationException($"Error accessing external API: status code {response.StatusCode}");
+                    throw new ApplicationException(message);
                 }
 
                 var billings = await response.Content.ReadFromJsonAsync<List<InvoiceDto>>();
@@ -44,6 +45,10 @@ namespace CaBackendTest.Infrastructure.Services
 
                 _logger.LogInformation("Billing data retrieved successfully from external API. Total: {Count}", billings.Count);
                 return billings;
+            }
+            catch (ApplicationException) // Re-throw ApplicationException
+            {
+                throw;
             }
             catch (HttpRequestException httpEx)
             {

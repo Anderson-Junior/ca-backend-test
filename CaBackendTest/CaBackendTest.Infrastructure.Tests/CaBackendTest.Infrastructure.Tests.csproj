@@ -19,8 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CaBackendTeste.Application\CaBackendTest.Application.csproj" />
-    <ProjectReference Include="..\CaBackendTeste.Domain\CaBackendTest.Domain.csproj" />
+    <ProjectReference Include="..\CaBackendTest.Infrastructure\CaBackendTest.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
